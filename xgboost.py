@@ -1,0 +1,81 @@
+# Import required libraries
+import xgboost as xgb
+from sklearn.datasets import load_breast_cancer  # Example dataset
+from sklearn.model_selection import train_test_split, GridSearchCV
+from sklearn.metrics import accuracy_score, classification_report
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+
+# Load example dataset (binary classification)
+data = load_breast_cancer()
+X = pd.DataFrame(data.data, columns=data.feature_names)
+y = data.target
+
+# Split data
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Create DMatrix (optimized XGBoost data structure)
+dtrain = xgb.DMatrix(X_train, label=y_train)
+dtest = xgb.DMatrix(X_test, label=y_test)
+
+# Define parameters
+params = {
+    'objective': 'binary:logistic',
+    'eval_metric': 'logloss',
+    'eta': 0.1,
+    'max_depth': 6,
+    'subsample': 0.8,
+    'colsample_bytree': 0.8,
+    'gamma': 0.1,
+    'min_child_weight': 3,
+    'seed': 42
+}
+
+# Train with early stopping
+evals = [(dtrain, 'train'), (dtest, 'eval')]
+model = xgb.train(
+    params,
+    dtrain,
+    num_boost_round=1000,
+    evals=evals,
+    early_stopping_rounds=10,
+    verbose_eval=50
+)
+
+# Make predictions
+pred_probs = model.predict(dtest)
+preds = [1 if prob > 0.5 else 0 for prob in pred_probs]
+
+# Evaluate
+print("\nClassification Report:")
+print(classification_report(y_test, preds))
+print(f"\nAccuracy: {accuracy_score(y_test, preds):.4f}")
+
+# Feature importance
+importance = model.get_score(importance_type='weight')
+print("\nTop 10 Important Features:")
+print(sorted(importance.items(), key=lambda x: x[1], reverse=True)[:10])
+
+# Plot feature importance
+xgb.plot_importance(model, max_num_features=10)
+plt.show()
+
+# Scikit-learn API alternative
+xgb_clf = xgb.XGBClassifier(**params)
+xgb_clf.fit(X_train, y_train, eval_set=[(X_test, y_test)], early_stopping_rounds=10)
+
+# Hyperparameter tuning example (simplified)
+param_grid = {
+    'max_depth': [3, 6, 9],
+    'learning_rate': [0.01, 0.1],
+    'n_estimators': [100, 200]
+}
+
+grid = GridSearchCV(xgb.XGBClassifier(), param_grid, cv=3, scoring='accuracy')
+grid.fit(X_train, y_train)
+print(f"\nBest parameters: {grid.best_params_}")
+print(f"Best CV accuracy: {grid.best_score_:.4f}")
+
+# Save model
+model.save_model('xgboost_model.json')
