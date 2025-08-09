@@ -1,8 +1,12 @@
-from fastapi import FastAPI, Depends
+from fastapi import FastAPI, Depends, Response
 from fastapi.middleware.cors import CORSMiddleware
 from core.models import DisputeCase, PulseSurvey, HRDFCourse, EPFCalculation
 from core.malaysian_compliance import MalaysianCompliance
 from core.ai_services import MalaysianAIServices
+from api.v2_endpoints import router as v2_router
+from api.nlp_endpoints import router as nlp_router
+from api.blockchain_endpoints import router as blockchain_router
+from monitoring.metrics import get_metrics, track_metrics
 
 app = FastAPI(
     title="HRMS Malaysia API",
@@ -20,9 +24,19 @@ app.add_middleware(
 
 ai_services = MalaysianAIServices()
 
+# Include routers
+app.include_router(v2_router)
+app.include_router(nlp_router)
+app.include_router(blockchain_router)
+
 @app.get("/")
 async def root():
     return {"message": "HRMS Malaysia API v2.0 - AI Powered"}
+
+@app.get("/metrics")
+async def metrics():
+    """Prometheus metrics endpoint"""
+    return Response(get_metrics(), media_type="text/plain")
 
 @app.post("/api/epf-calculator")
 async def calculate_epf(calculation: EPFCalculation):

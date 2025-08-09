@@ -63,5 +63,7 @@ class HRAgents:
             salary = float(salary_str)
             result = MalaysianCompliance.calculate_socso(salary)
             return f"SOCSO: Employee RM{result['employee_contribution']}, Employer RM{result['employer_contribution']}"
-        except:
-            return "Invalid salary amount"
+        except (ValueError, TypeError) as e:
+            return f"Invalid salary amount: {e}"
+        except Exception as e:
+            return f"Error calculating SOCSO: {e}"

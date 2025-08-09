@@ -296,8 +296,8 @@ A **Human Resource Management System (HRMS)** is a comprehensive software soluti
 ✔ **Seamless Government Reporting (EPF, SOCSO, LHDN)**  
 
 📞 **Contact Us:**  
-📧 sales@hrm-ai.my  
-🌐 [www.hrm-ai.my](https://www.hrm-ai.my)  
+📧 sales@xxx.xx.my  
+🌐 [www.xxx.xx.my](https://www.xxx.xx.my)  
 
 ---
 
@@ -308,10 +308,10 @@ This **Complete HRMS Solution** is designed to **simplify HR tasks, reduce compl
 ## **Quick Start**
 
 ### **Prerequisites**
-- Python 3.8+
-- Node.js 16+
-- PostgreSQL 12+
-- Redis 6+
+- Python 3.10+
+- Node.js 18+
+- Docker & Docker Compose
+- 8GB RAM (for AI models)
 
 ### **Installation**
 
@@ -320,17 +320,20 @@ This **Complete HRMS Solution** is designed to **simplify HR tasks, reduce compl
 git clone https://github.com/your-org/hrms-malaysia.git
 cd hrms-malaysia
 
-# Backend setup
+# Start all services
+./scripts/start_services.sh
+
+# Or manual setup
 cd backend
 pip install -r requirements.txt
-python manage.py migrate
-python manage.py runserver
-
-# Frontend setup
-cd ../frontend
-npm install
-npm start
+uvicorn main:app --reload
 ```
+
+### **Access Points**
+- **API**: http://localhost:8000
+- **Dashboard**: http://localhost:8501
+- **AI Interface**: http://localhost:7860
+- **Monitoring**: http://localhost:9090
 
 ### **Environment Variables**
 ```bash

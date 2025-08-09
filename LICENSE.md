@@ -1,4 +1,4 @@
-&#169; 2025 Kurnia Kadir data-kk666679
+©️ 2025 Kurnia Kadir HRMS
 Licensed under the MIT license
 
 Author: Kurnia Kadir

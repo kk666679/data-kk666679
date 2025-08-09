@@ -1,0 +1,32 @@
+version: '3.8'
+
+services:
+  backend:
+    ports:
+      - "8000:8000"
+    environment:
+      - PYTHONPATH=/app
+    command: uvicorn main:app --host 0.0.0.0 --port 8000 --reload
+    
+  streamlit:
+    build: ./backend
+    ports:
+      - "8501:8501"
+    command: streamlit run streamlit_dashboard.py --server.port=8501 --server.address=0.0.0.0
+    depends_on:
+      - backend
+      
+  gradio:
+    build: ./backend
+    ports:
+      - "7860:7860"
+    command: python gradio_interface.py
+    depends_on:
+      - backend
+      
+  prometheus:
+    image: prom/prometheus:latest
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml
