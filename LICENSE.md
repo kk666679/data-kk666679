@@ -1,30 +1,80 @@
-# License
+# License Agreement
 
-©️ 2025 Kurnia Kadir HRMS  
-Licensed under the MIT License.
+## Effective Date: [Insert Date]
 
-**Author:** Kurnia Kadir  
-**Contact:** kurnia.kadir@chemmara.com  
-**Source:** https://github.com/kk666679/data-kk666679
+This License Agreement ("Agreement") governs the use of HRPBloom ("Software"), a proprietary Human Resource Management System developed by Chemmara Enterprise ("Licensor").
 
----
+## 1. License Grant
+Subject to compliance with this Agreement, Licensor grants the Licensee:
+- A non-exclusive, non-transferable license to use the Software
+- Rights to access AI-HRMS Enterprise features
+- Permission for authorized integrations per documentation
 
-## MIT License
+## 2. Restrictions
+Licensee shall not:
+- Reverse engineer, decompile, or disassemble the Software
+- Use the Multi-AI Agent system to develop competing products
+- Bypass any security features or usage limits
+- Transfer NLP model outputs to third-party systems without authorization
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
+## 3. Intellectual Property
+All rights, title, and interest in:
+- HRPBloom's Natural Language Processing (NLP) components
+- Multi-AI Agent architecture and algorithms
+- System documentation and blueprints
+remain the exclusive property of Licensor.
 
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
+## 4. Data Ownership
+- Employee data processed through the system remains property of Licensee
+- Anonymized usage data may be collected for system improvement
+- Malaysian PDPA compliance is jointly maintained
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
+## 5. Compliance Requirements
+Licensee agrees to:
+- Maintain all necessary Malaysian labor law compliances
+- Complete annual system audits as required
+- Implement all mandatory security patches
+
+## 6. Service Levels
+For production environments:
+- 99.5% uptime SLA for core HR modules
+- 72-hour response time for critical defects
+- 30-day notice for scheduled maintenance
+
+## 7. Liability Limitations
+Licensor's total liability shall not exceed:
+- 12 months of license fees for direct damages
+- Excludes consequential damages from AI recommendations
+
+## 8. Termination
+This Agreement terminates if:
+- Licensee breaches payment obligations
+- Unauthorized system modifications occur
+- Upon 30 days written notice by either party
+
+## 9. Governing Law
+This Agreement shall be governed by and construed in accordance with the laws of Malaysia, with disputes resolved in Kuala Lumpur courts.
+
+## 10. Entire Agreement
+This document constitutes the complete agreement between parties regarding, superseding all prior agreements.
+
+## Acceptable Use Policy (AUP) Addendum
+
+### AI-Specific Provisions:
+1. **Ethical AI Use**: 
+   - Prohibits use of HRPBloom's AI for discriminatory practices
+   - Requires human oversight for all consequential employment decisions
+
+2. **Model Training**: 
+   - Licensee may provide domain-specific training data
+   - Derived models remain Licensor's property
+
+3. **Audit Rights**: 
+   - Licensor may audit AI decision logs for compliance
+   - 90-day retention of all algorithmic employment recommendations
+
+### Signature Block:
+
+LICENSEE: ___________________________   DATE: _______________
+
+LICENSOR: Chemmara Enterprise         DATE: _______________
