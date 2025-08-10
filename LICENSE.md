@@ -2,7 +2,7 @@
 
 ## Effective Date: [Insert Date]
 
-This License Agreement ("Agreement") governs the use of HRPBloom ("Software"), a proprietary Human Resource Management System developed by Chemmara Enterprise ("Licensor").
+This License Agreement ("Agreement") governs the use of HRMS ("Software"), a proprietary Human Resource Management System developed by Chemmara Enterprise ("Licensor").
 
 ## 1. License Grant
 Subject to compliance with this Agreement, Licensor grants the Licensee:
@@ -19,7 +19,7 @@ Licensee shall not:
 
 ## 3. Intellectual Property
 All rights, title, and interest in:
-- HRPBloom's Natural Language Processing (NLP) components
+- HRMS's Natural Language Processing (NLP) components
 - Multi-AI Agent architecture and algorithms
 - System documentation and blueprints
 remain the exclusive property of Licensor.
@@ -62,7 +62,7 @@ This document constitutes the complete agreement between parties regarding, supe
 
 ### AI-Specific Provisions:
 1. **Ethical AI Use**: 
-   - Prohibits use of HRPBloom's AI for discriminatory practices
+   - Prohibits use of HRMS's AI for discriminatory practices
    - Requires human oversight for all consequential employment decisions
 
 2. **Model Training**: 
