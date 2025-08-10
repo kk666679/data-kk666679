@@ -1,40 +1,76 @@
 name: hrms_mobile
-description: HRMS Malaysia Mobile App
-version: 1.0.0+1
+description: HRMS Malaysia Mobile App - AI-Powered HR Management
+version: 2.0.0+1
 
 environment:
-  sdk: '>=3.0.0 <4.0.0'
-  flutter: ">=3.10.0"
+  sdk: '>=3.5.0 <4.0.0'
+  flutter: ">=3.24.0"
 
 dependencies:
   flutter:
     sdk: flutter
   
   # UI Components
-  cupertino_icons: ^1.0.6
-  flutter_screenutil: ^5.9.0
+  cupertino_icons: ^1.0.8
+  flutter_screenutil: ^5.9.3
+  material_design_icons_flutter: ^7.0.7296
   
   # State Management
-  flutter_bloc: ^8.1.3
+  flutter_bloc: ^8.1.6
   equatable: ^2.0.5
+  get_it: ^8.0.2
+  injectable: ^2.5.0
   
   # Network
-  dio: ^5.4.0
-  retrofit: ^4.0.3
-  json_annotation: ^4.8.1
+  dio: ^5.7.0
+  retrofit: ^4.4.1
+  json_annotation: ^4.9.0
+  connectivity_plus: ^6.0.5
   
   # Storage
-  shared_preferences: ^2.2.2
+  shared_preferences: ^2.3.2
   hive: ^2.2.3
   hive_flutter: ^1.1.0
+  secure_storage: ^3.3.5
   
   # Utils
   intl: ^0.19.0
-  logger: ^2.0.2+1
+  logger: ^2.4.0
+  uuid: ^4.5.1
+  path_provider: ^2.1.4
   
   # Malaysian specific
   flutter_localizations:
     sdk: flutter
+  
+  # Biometric & Security
+  local_auth: ^2.3.0
+  crypto: ^3.0.5
+  
+  # Camera & File handling
+  image_picker: ^1.1.2
+  file_picker: ^8.1.2
+  permission_handler: ^11.3.1
+  
+  # Push notifications
+  firebase_core: ^3.6.0
+  firebase_messaging: ^15.1.3
+  flutter_local_notifications: ^18.0.1
+  
+  # Charts & Analytics
+  fl_chart: ^0.69.0
+  syncfusion_flutter_charts: ^27.1.58
+  
+  # QR Code
+  qr_code_scanner: ^1.0.1
+  qr_flutter: ^4.1.0
+  
+  # Malaysian Payment Integration
+  razorpay_flutter: ^1.3.7
+  
+  # Offline support
+  drift: ^2.20.3
+  sqlite3_flutter_libs: ^0.5.24
 
 dev_dependencies:
   flutter_test:

@@ -2,14 +2,36 @@ from langchain.agents import AgentExecutor, create_openai_functions_agent
 from langchain.tools import Tool
 from langchain_openai import ChatOpenAI
 from langchain.prompts import ChatPromptTemplate
-from langchain.memory import ConversationBufferMemory
-from typing import Dict, List
+from langchain.memory import ConversationBufferMemory, ConversationSummaryBufferMemory
+from langchain.callbacks import AsyncCallbackManager
+from langchain.cache import InMemoryCache
+from typing import Dict, List, Optional
 import asyncio
+import json
+from datetime import datetime, timedelta
+from functools import lru_cache
+import redis
+from core.malaysian_compliance import MalaysianCompliance
 
 class HRMultiAgentSystem:
-    def __init__(self):
-        self.llm = ChatOpenAI(model="gpt-3.5-turbo", temperature=0)
+    def __init__(self, redis_url: Optional[str] = None):
+        # Initialize with better models and caching
+        self.llm = ChatOpenAI(
+            model="gpt-4o-mini",  # Better performance/cost ratio
+            temperature=0.1,
+            max_tokens=2000,
+            request_timeout=30
+        )
+        
+        # Redis cache for agent responses
+        self.redis_client = redis.from_url(redis_url) if redis_url else None
+        self.cache_ttl = 3600  # 1 hour
+        
+        # Malaysian compliance integration
+        self.compliance = MalaysianCompliance()
+        
         self.agents = {}
+        self.agent_metrics = {}
         self._initialize_agents()
     
     def _initialize_agents(self):

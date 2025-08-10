@@ -1,8 +1,14 @@
 # Complete Human Resource Management System (HRMS) for Malaysian Businesses
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Python 3.8+](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/downloads/)
-[![Node.js 16+](https://img.shields.io/badge/node.js-16+-green.svg)](https://nodejs.org/)
+[![Python 3.11+](https://img.shields.io/badge/python-3.11+-blue.svg)](https://www.python.org/downloads/)
+[![Node.js 20+](https://img.shields.io/badge/node.js-20+-green.svg)](https://nodejs.org/)
+[![Docker](https://img.shields.io/badge/docker-24.0+-blue.svg)](https://www.docker.com/)
+[![FastAPI](https://img.shields.io/badge/FastAPI-0.115+-green.svg)](https://fastapi.tiangolo.com/)
+[![React](https://img.shields.io/badge/React-18.3+-blue.svg)](https://reactjs.org/)
+[![Flutter](https://img.shields.io/badge/Flutter-3.24+-blue.svg)](https://flutter.dev/)
+[![AI Powered](https://img.shields.io/badge/AI-Powered-purple.svg)](https://openai.com/)
+[![Malaysia Ready](https://img.shields.io/badge/Malaysia-Ready-red.svg)](https://www.malaysia.gov.my/)
 
 An AI-powered Human Resource Management System tailored for Malaysian businesses with full compliance to local labor laws and regulations.
 

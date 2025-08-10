@@ -1,39 +1,39 @@
-import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import { ConfigProvider } from 'antd';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { Toaster } from 'react-hot-toast';
-import Dashboard from './pages/Dashboard';
-import Employees from './pages/Employees';
-import Payroll from './pages/Payroll';
-import Layout from './components/Layout';
+import { Suspense, lazy } from 'react'
+import { Routes, Route } from 'react-router-dom'
+import { Spin } from 'antd'
+import { Layout } from 'antd'
+import { useState } from 'react'
 
-const queryClient = new QueryClient();
+const { Header, Content } = Layout
 
-const App: React.FC = () => {
+// Lazy load pages for better performance
+const Dashboard = lazy(() => import('./pages/Dashboard'))
+
+export default function App() {
+  const [collapsed, setCollapsed] = useState(false)
+
   return (
-    <QueryClientProvider client={queryClient}>
-      <ConfigProvider
-        theme={{
-          token: {
-            colorPrimary: '#1890ff',
-            borderRadius: 6,
-          },
-        }}
-      >
-        <Router>
-          <Layout>
+    <Layout style={{ minHeight: '100vh' }}>
+      <Header style={{ padding: 0, background: '#fff' }}>
+        <div style={{ color: '#000', fontSize: 18, padding: '0 16px' }}>
+          HRMS Dashboard
+        </div>
+      </Header>
+      
+      <Layout>
+        <Content style={{ margin: '24px 16px', padding: 24, minHeight: 280 }}>
+          <Suspense fallback={
+            <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%' }}>
+              <Spin size="large" />
+            </div>
+          }>
             <Routes>
               <Route path="/" element={<Dashboard />} />
-              <Route path="/employees" element={<Employees />} />
-              <Route path="/payroll" element={<Payroll />} />
+              <Route path="/dashboard" element={<Dashboard />} />
             </Routes>
-          </Layout>
-        </Router>
-        <Toaster position="top-right" />
-      </ConfigProvider>
-    </QueryClientProvider>
-  );
-};
-
-export default App;
+          </Suspense>
+        </Content>
+      </Layout>
+    </Layout>
+  )
+}

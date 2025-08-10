@@ -1,16 +1,42 @@
 import hashlib
 import json
-from datetime import datetime
-from typing import Dict, List, Optional
-from dataclasses import dataclass
+from datetime import datetime, timezone
+from typing import Dict, List, Optional, Union
+from dataclasses import dataclass, asdict
+from cryptography.hazmat.primitives import hashes, serialization
+from cryptography.hazmat.primitives.asymmetric import rsa, padding
+from cryptography.hazmat.backends import default_backend
+import base64
+import threading
+from concurrent.futures import ThreadPoolExecutor
+import asyncio
 
 @dataclass
 class HRTransaction:
     employee_id: str
-    transaction_type: str  # payroll, attendance, leave, performance
+    transaction_type: str  # payroll, attendance, leave, performance, compliance
     data: Dict
     timestamp: datetime
     hash: Optional[str] = None
+    digital_signature: Optional[str] = None
+    compliance_flags: List[str] = None
+    
+    def __post_init__(self):
+        if self.compliance_flags is None:
+            self.compliance_flags = []
+        if self.timestamp.tzinfo is None:
+            self.timestamp = self.timestamp.replace(tzinfo=timezone.utc)
+    
+    def to_dict(self) -> Dict:
+        return {
+            'employee_id': self.employee_id,
+            'transaction_type': self.transaction_type,
+            'data': self.data,
+            'timestamp': self.timestamp.isoformat(),
+            'hash': self.hash,
+            'digital_signature': self.digital_signature,
+            'compliance_flags': self.compliance_flags
+        }
 
 class HRMSBlockchain:
     def __init__(self):
