@@ -1,5 +1,9 @@
 # Complete Human Resource Management System (HRMS) for Malaysian Businesses
 
+![HRMS Dashboard](https://img.shields.io/badge/Dashboard-Live-brightgreen)
+![API Status](https://img.shields.io/badge/API-Operational-blue)
+![Compliance](https://img.shields.io/badge/Malaysian%20Compliance-100%25-success)
+
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Python 3.11+](https://img.shields.io/badge/python-3.11+-blue.svg)](https://www.python.org/downloads/)
 [![Node.js 20+](https://img.shields.io/badge/node.js-20+-green.svg)](https://nodejs.org/)

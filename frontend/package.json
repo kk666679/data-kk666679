@@ -1,60 +1,26 @@
 {
-  "name": "hrms-frontend",
-  "version": "3.0.0",
+  "name": "hrms-malaysia-frontend",
+  "version": "3.1.0",
   "private": true,
-  "engines": {
-    "node": ">=20.0.0",
-    "npm": ">=10.0.0"
-  },
   "dependencies": {
-    "@ant-design/icons": "^5.5.1",
-    "@ant-design/pro-components": "^2.8.1",
-    "@hookform/resolvers": "^3.9.1",
-    "@tanstack/react-query": "^5.59.16",
-    "@tanstack/react-query-devtools": "^5.59.16",
-    "antd": "^5.21.6",
-    "axios": "^1.7.7",
-    "dayjs": "^1.11.13",
-    "framer-motion": "^11.11.17",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
-    "react-hook-form": "^7.53.2",
-    "react-hot-toast": "^2.4.1",
-    "react-router-dom": "^6.28.0",
-    "recharts": "^2.13.3",
-    "zod": "^3.23.8",
-    "zustand": "^5.0.1",
-    "@types/react": "^18.3.12",
-    "@types/react-dom": "^18.3.1",
-    "typescript": "^5.6.3",
-    "vite": "^5.4.10",
-    "@vitejs/plugin-react": "^4.3.3",
-    "@vitejs/plugin-react-swc": "^3.7.1",
+    "framer-motion": "^11.11.17",
+    "lucide-react": "^0.460.0",
     "tailwindcss": "^3.4.14",
     "autoprefixer": "^10.4.20",
-    "postcss": "^8.4.49",
-    "@headlessui/react": "^2.2.0",
-    "@heroicons/react": "^2.1.5",
-    "react-i18next": "^15.1.1",
-    "i18next": "^23.16.4",
-    "react-helmet-async": "^2.0.5",
-    "@sentry/react": "^8.37.1"
+    "postcss": "^8.5.0"
   },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject",
-    "dev": "react-scripts start",
-    "preview": "serve -s build"
+    "eject": "react-scripts eject"
   },
   "devDependencies": {
-    "@types/react": "^18.2.45",
-    "@types/react-dom": "^18.2.18",
-    "react-scripts": "^0.0.0",
-    "serve": "^14.2.4",
-    "typescript": "^4.9.5",
-    "webpack-dev-server": "^5.2.1"
+    "react-scripts": "5.0.1",
+    "@types/react": "^18.3.12",
+    "@types/react-dom": "^18.3.1"
   },
   "browserslist": {
     "production": [
@@ -65,7 +31,7 @@
     "development": [
       "last 1 chrome version",
       "last 1 firefox version",
-      "last  1 safari version"
+      "last 1 safari version"
     ]
   }
 }

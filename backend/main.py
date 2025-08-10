@@ -3,6 +3,8 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 import os
+from backend.modules.payroll_module import router as payroll_router
+from backend.api.dashboard import router as dashboard_router
 
 app = FastAPI(
     title="HRMS Malaysia",
@@ -55,6 +57,9 @@ async def get_translations(lang: str):
         "zh": {"welcome": "欢迎", "dashboard": "仪表板"}
     }
     return {"messages": translations.get(lang, translations["en"])}
+
+app.include_router(payroll_router)
+app.include_router(dashboard_router)
 
 if __name__ == "__main__":
     import uvicorn
