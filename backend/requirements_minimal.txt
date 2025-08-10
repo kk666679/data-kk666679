@@ -1,7 +1,21 @@
-fastapi==0.108.0
-uvicorn[standard]==0.25.0
-pydantic==2.5.3
-python-multipart==0.0.6
-pandas==2.2.0
-numpy==1.26.3
-prometheus-client==0.19.0
+# Core Framework - Security Updated
+fastapi==0.115.0
+uvicorn[standard]==0.32.0
+sqlalchemy==2.0.36
+psycopg2-binary==2.9.10
+redis==5.2.0
+pydantic==2.10.2
+python-multipart>=0.0.18  # CVE-2024-53981 fix
+starlette>=0.40.0         # CVE-2024-47874 fix
+setuptools>=78.1.1        # CVE-2024-6345, CVE-2025-47273 fix
+
+# Data Processing
+pandas==2.2.3
+numpy>=1.23.5,<2.0
+
+# Security
+cryptography==43.0.3
+python-dotenv==1.0.1
+
+# Monitoring
+prometheus-client==0.21.0
