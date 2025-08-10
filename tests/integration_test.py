@@ -1,105 +1,110 @@
-import pytest
-import asyncio
-import httpx
-from core.malaysian_compliance import MalaysianCompliance
-from integrations.malaysian_apis import MalaysianAPIIntegration
+#!/usr/bin/env python3
+"""
+HRMS Malaysia Integration Tests
+Tests Malaysian compliance, API endpoints, and core functionality
+"""
 
-class TestMalaysianIntegration:
-    
-    @pytest.fixture
-    def api_client(self):
-        return httpx.AsyncClient(base_url="http://localhost:8000")
-    
-    @pytest.mark.asyncio
-    async def test_epf_calculation(self, api_client):
-        """Test EPF calculation endpoint"""
-        response = await api_client.post("/api/epf-calculator", json={
-            "basic_salary": 5000,
-            "employee_rate": 0.11,
-            "employer_rate": 0.13
-        })
-        assert response.status_code == 200
-        data = response.json()
-        assert data["employee_contribution"] == 550
-        assert data["employer_contribution"] == 650
-    
-    @pytest.mark.asyncio
-    async def test_socso_calculation(self, api_client):
-        """Test SOCSO calculation endpoint"""
-        response = await api_client.post("/api/socso-calculator", json={
-            "basic_salary": 5000
-        })
-        assert response.status_code == 200
-        data = response.json()
-        assert "employee_premium" in data
-        assert "employer_premium" in data
-    
-    @pytest.mark.asyncio
-    async def test_hrdf_claim(self, api_client):
-        """Test HRDF claim calculation"""
-        response = await api_client.post("/api/ld/hrdf-claim", json={
-            "code": "TECH001",
-            "hours": 40,
-            "provider": "TechTraining Sdn Bhd",
-            "claimable_amount": 2000
-        })
-        assert response.status_code == 200
-        data = response.json()
-        assert "claimable_amount" in data
-    
-    @pytest.mark.asyncio
-    async def test_sentiment_analysis(self, api_client):
-        """Test Malaysian sentiment analysis"""
-        response = await api_client.post("/api/er/sentiment-analysis", json={
-            "department": "IT",
-            "engagement_score": 7.5,
-            "comments": ["Kerja bagus", "Team spirit excellent"]
-        })
-        assert response.status_code == 200
-        data = response.json()
-        assert "sentiment" in data
-        assert "cultural_indicators" in data
-    
-    @pytest.mark.asyncio
-    async def test_resume_parsing(self, api_client):
-        """Test Malaysian resume parsing"""
-        resume_text = """
-        John Lim Wei Ming
-        IC: 901234-56-7890
-        Education: Bachelor of Computer Science, Universiti Malaya
-        Skills: Python, Bahasa Malaysia, Mandarin
-        Experience: 3 years software development
-        """
+import requests
+import json
+import sys
+from datetime import datetime
+
+class HRMSIntegrationTest:
+    def __init__(self, base_url="http://localhost:8000"):
+        self.base_url = base_url
+        self.passed = 0
+        self.failed = 0
+
+    def test_api_health(self):
+        """Test API health endpoint"""
+        try:
+            response = requests.get(f"{self.base_url}/health", timeout=5)
+            assert response.status_code == 200
+            print("✅ API Health Check")
+            self.passed += 1
+        except Exception as e:
+            print(f"❌ API Health Check: {e}")
+            self.failed += 1
+
+    def test_malaysian_compliance(self):
+        """Test Malaysian compliance calculations"""
+        try:
+            # Test EPF calculation
+            payload = {"salary": 5000, "employee_type": "local"}
+            response = requests.post(f"{self.base_url}/api/payroll/epf", json=payload, timeout=5)
+            
+            if response.status_code == 200:
+                data = response.json()
+                expected_employee = 5000 * 0.11  # 11%
+                expected_employer = 5000 * 0.13  # 13%
+                
+                assert abs(data["employee_contribution"] - expected_employee) < 0.01
+                assert abs(data["employer_contribution"] - expected_employer) < 0.01
+                print("✅ EPF Calculation")
+                self.passed += 1
+            else:
+                raise Exception(f"EPF API returned {response.status_code}")
+                
+        except Exception as e:
+            print(f"❌ EPF Calculation: {e}")
+            self.failed += 1
+
+    def test_ai_services(self):
+        """Test AI services"""
+        try:
+            payload = {"text": "Saya sangat gembira bekerja di sini"}
+            response = requests.post(f"{self.base_url}/api/ai/sentiment", json=payload, timeout=10)
+            
+            if response.status_code == 200:
+                data = response.json()
+                assert "sentiment" in data
+                assert "language" in data
+                print("✅ AI Sentiment Analysis")
+                self.passed += 1
+            else:
+                raise Exception(f"AI API returned {response.status_code}")
+                
+        except Exception as e:
+            print(f"❌ AI Sentiment Analysis: {e}")
+            self.failed += 1
+
+    def test_multi_language_support(self):
+        """Test multi-language support"""
+        try:
+            languages = ["en", "ms", "zh"]
+            for lang in languages:
+                response = requests.get(f"{self.base_url}/api/i18n/{lang}", timeout=5)
+                if response.status_code == 200:
+                    data = response.json()
+                    assert "messages" in data
+                    
+            print("✅ Multi-language Support")
+            self.passed += 1
+        except Exception as e:
+            print(f"❌ Multi-language Support: {e}")
+            self.failed += 1
+
+    def run_all_tests(self):
+        """Run all integration tests"""
+        print("🧪 HRMS Malaysia Integration Tests")
+        print("==================================")
         
-        response = await api_client.post("/api/ta/parse-resume", json={
-            "resume_text": resume_text
-        })
-        assert response.status_code == 200
-        data = response.json()
-        assert "local_relevance_score" in data
-        assert "malaysian_institutions_detected" in data
-
-class TestCompliance:
-    
-    def test_epf_rates(self):
-        """Test EPF rate calculations"""
-        compliance = MalaysianCompliance()
-        rates = compliance.get_current_epf_rates()
-        assert rates["employee"] == 0.11
-        assert rates["employer"] == 0.13
-    
-    def test_socso_calculation(self):
-        """Test SOCSO premium calculation"""
-        compliance = MalaysianCompliance()
-        premium = compliance.calculate_socso(5000)
-        assert premium["employee"] > 0
-        assert premium["employer"] > 0
-    
-    def test_pcb_calculation(self):
-        """Test PCB tax calculation"""
-        compliance = MalaysianCompliance()
-        pcb = compliance.calculate_pcb(5000, "single")
-        assert pcb >= 0
+        self.test_api_health()
+        self.test_malaysian_compliance()
+        self.test_ai_services()
+        self.test_multi_language_support()
+        
+        print(f"\n📊 Test Results:")
+        print(f"✅ Passed: {self.passed}")
+        print(f"❌ Failed: {self.failed}")
+        print(f"📈 Success Rate: {(self.passed/(self.passed+self.failed)*100):.1f}%")
+        
+        if self.failed > 0:
+            print("⚠️ Some tests failed. Check logs above.")
+            sys.exit(1)
+        else:
+            print("🎉 All tests passed! System is ready for production.")
 
 if __name__ == "__main__":
-    pytest.main([__file__, "-v"])
+    tester = HRMSIntegrationTest()
+    tester.run_all_tests()

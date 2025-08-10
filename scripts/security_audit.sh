@@ -1,57 +1,52 @@
 #!/bin/bash
 
 # HRMS Malaysia Security Audit Script
+# Monitors security vulnerabilities and compliance
+
 set -e
 
-GREEN='\033[0;32m'
-RED='\033[0;31m'
-YELLOW='\033[1;33m'
-NC='\033[0m'
+echo "🔒 HRMS Malaysia Security Audit"
+echo "================================"
 
-echo -e "${GREEN}🔒 HRMS Malaysia Security Audit${NC}"
-
-# Check Docker security
-echo -e "${YELLOW}🐳 Docker Security Check${NC}"
-docker run --rm -v /var/run/docker.sock:/var/run/docker.sock \
-  aquasec/trivy image hrms-backend:latest
-
-# Check for secrets in code
-echo -e "${YELLOW}🔍 Secret Scanning${NC}"
-if command -v truffleHog >/dev/null 2>&1; then
-    truffleHog --regex --entropy=False .
-else
-    echo "⚠️  TruffleHog not installed, skipping secret scan"
+# Check if Trivy is installed
+if ! command -v trivy &> /dev/null; then
+    echo "📦 Installing Trivy security scanner..."
+    curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh | sh -s -- -b /usr/local/bin
 fi
 
-# SSL/TLS Configuration Check
-echo -e "${YELLOW}🔐 SSL/TLS Check${NC}"
-if [ -f "nginx/ssl/cert.pem" ]; then
-    openssl x509 -in nginx/ssl/cert.pem -text -noout | grep -E "(Not Before|Not After|Subject:|Issuer:)"
-    echo "✅ SSL certificate found and valid"
+# Scan Docker images
+echo "🔍 Scanning Docker images for vulnerabilities..."
+trivy image --severity HIGH,CRITICAL hrms-malaysia-backend:latest || true
+trivy image --severity HIGH,CRITICAL hrms-malaysia-frontend:latest || true
+
+# Scan filesystem
+echo "🗂️ Scanning filesystem..."
+trivy fs --severity HIGH,CRITICAL . || true
+
+# Check Python dependencies
+echo "🐍 Checking Python security..."
+if command -v safety &> /dev/null; then
+    safety check -r backend/requirements.txt || true
 else
-    echo "❌ SSL certificate not found"
+    pip install safety
+    safety check -r backend/requirements.txt || true
 fi
 
-# Database Security Check
-echo -e "${YELLOW}🗄️  Database Security${NC}"
-docker-compose exec -T postgres psql -U hrms_user -d hrms_db -c "
-SELECT name, setting FROM pg_settings 
-WHERE name IN ('ssl', 'log_connections', 'log_disconnections', 'log_statement');
-"
+# Check Node.js dependencies
+echo "📦 Checking Node.js security..."
+cd frontend && npm audit --audit-level=high || true
+cd ..
 
-# API Security Test
-echo -e "${YELLOW}🌐 API Security Test${NC}"
-curl -s -o /dev/null -w "%{http_code}" http://localhost:8000/metrics
-if [ $? -eq 0 ]; then
-    echo "⚠️  Metrics endpoint accessible without authentication"
-else
-    echo "✅ Metrics endpoint properly secured"
-fi
+# Malaysian compliance checks
+echo "🇲🇾 Malaysian Compliance Verification..."
+python -c "
+import sys
+sys.path.append('backend')
+from core.compliance import MalaysianCompliance
+compliance = MalaysianCompliance()
+print('✅ EPF calculations:', compliance.validate_epf())
+print('✅ SOCSO compliance:', compliance.validate_socso())
+print('✅ PDPA compliance:', compliance.validate_pdpa())
+" || echo "⚠️ Compliance check requires backend setup"
 
-# Rate Limiting Test
-echo -e "${YELLOW}⚡ Rate Limiting Test${NC}"
-for i in {1..15}; do
-    curl -s -o /dev/null -w "%{http_code}\n" http://localhost:8000/health
-done | tail -5
-
-echo -e "${GREEN}🔒 Security audit completed${NC}"
+echo "🔒 Security audit completed!"

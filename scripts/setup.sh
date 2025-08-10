@@ -1,23 +1,43 @@
 #!/bin/bash
 
-echo "Setting up HRMS Malaysia development environment..."
+# HRMS Malaysia Setup Script
+set -e
 
-# Create virtual environment
-python3 -m venv venv
-source venv/bin/activate
+echo "🚀 Setting up HRMS Malaysia..."
 
-# Install backend dependencies
+# Install Python dependencies
+echo "📦 Installing Python dependencies..."
 cd backend
 pip install -r requirements.txt
 cd ..
 
-# Install frontend dependencies
+# Install Node.js dependencies
+echo "📦 Installing Node.js dependencies..."
 cd frontend
 npm install
 cd ..
 
-# Copy environment file
-cp .env.example .env
+# Setup database
+echo "🗄️ Setting up database..."
+docker-compose up -d postgres redis
+sleep 10
 
-echo "Setup complete! Please update .env file with your configuration."
-echo "Run 'docker-compose up' to start the development environment."
+# Initialize database
+echo "🔧 Initializing database..."
+cd backend
+python -c "
+from core.database import init_db
+init_db()
+print('✅ Database initialized')
+"
+cd ..
+
+# Start services
+echo "🏃 Starting all services..."
+docker-compose up -d
+
+echo "✅ Setup completed!"
+echo "🌐 Access points:"
+echo "   - API: http://localhost:8000"
+echo "   - Frontend: http://localhost:3000"
+echo "   - Docs: http://localhost:8000/docs"

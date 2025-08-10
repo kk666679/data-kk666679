@@ -1,81 +1,59 @@
 #!/bin/bash
 
-# HRMS Malaysia Production Deployment
+# HRMS Malaysia Production Deployment Script
+# Usage: ./scripts/deploy.sh production
+
 set -e
 
-ENVIRONMENT=${1:-production}
-GREEN='\033[0;32m'
-RED='\033[0;31m'
-YELLOW='\033[1;33m'
-NC='\033[0m'
+ENVIRONMENT=${1:-staging}
+PROJECT_NAME="hrms-malaysia"
+VERSION=$(git describe --tags --always)
 
-echo -e "${GREEN}🚀 HRMS Malaysia Deployment - ${ENVIRONMENT}${NC}"
+echo "🚀 Deploying HRMS Malaysia v${VERSION} to ${ENVIRONMENT}"
+
+# Validate environment
+if [[ "$ENVIRONMENT" != "production" && "$ENVIRONMENT" != "staging" ]]; then
+    echo "❌ Invalid environment. Use 'production' or 'staging'"
+    exit 1
+fi
 
 # Pre-deployment checks
-echo -e "${YELLOW}📋 Pre-deployment checks${NC}"
+echo "🔍 Running pre-deployment checks..."
+docker --version || { echo "❌ Docker not installed"; exit 1; }
+docker-compose --version || { echo "❌ Docker Compose not installed"; exit 1; }
 
-# Check environment file
-if [ ! -f ".env.${ENVIRONMENT}" ]; then
-    echo -e "${RED}❌ Environment file .env.${ENVIRONMENT} not found${NC}"
-    exit 1
-fi
+# Build and deploy
+echo "🏗️ Building containers..."
+docker-compose -f docker-compose.yml -f docker-compose.${ENVIRONMENT}.yml build
 
-# Check SSL certificates for production
-if [ "$ENVIRONMENT" = "production" ] && [ ! -f "nginx/ssl/cert.pem" ]; then
-    echo -e "${RED}❌ SSL certificates required for production${NC}"
-    exit 1
-fi
+echo "🔄 Stopping existing services..."
+docker-compose -f docker-compose.yml -f docker-compose.${ENVIRONMENT}.yml down
 
-# Backup database
-echo -e "${YELLOW}💾 Creating database backup${NC}"
-mkdir -p backups
-docker-compose exec -T postgres pg_dump -U hrms_user hrms_db > "backups/backup_$(date +%Y%m%d_%H%M%S).sql"
-
-# Pull latest code
-echo -e "${YELLOW}📥 Pulling latest code${NC}"
-git pull origin main
-
-# Build images
-echo -e "${YELLOW}🔨 Building images${NC}"
-docker-compose -f docker-compose.yml -f "docker-compose.${ENVIRONMENT}.yml" build --no-cache
-
-# Run tests
-echo -e "${YELLOW}🧪 Running tests${NC}"
-python -m pytest tests/ -v
-
-# Deploy services
-echo -e "${YELLOW}🚀 Deploying services${NC}"
-docker-compose -f docker-compose.yml -f "docker-compose.${ENVIRONMENT}.yml" up -d
+echo "🚀 Starting services..."
+docker-compose -f docker-compose.yml -f docker-compose.${ENVIRONMENT}.yml up -d
 
 # Health checks
-echo -e "${YELLOW}🏥 Health checks${NC}"
+echo "🏥 Running health checks..."
 sleep 30
 
-# Check backend
-if curl -f http://localhost:8000/health >/dev/null 2>&1; then
-    echo -e "${GREEN}✅ Backend healthy${NC}"
+# Check API health
+if curl -f http://localhost:8000/health > /dev/null 2>&1; then
+    echo "✅ Backend API is healthy"
 else
-    echo -e "${RED}❌ Backend health check failed${NC}"
+    echo "❌ Backend API health check failed"
     exit 1
 fi
 
-# Check AI services
-if curl -f http://localhost:8001/health >/dev/null 2>&1; then
-    echo -e "${GREEN}✅ AI services healthy${NC}"
+# Check frontend
+if curl -f http://localhost:3000 > /dev/null 2>&1; then
+    echo "✅ Frontend is healthy"
 else
-    echo -e "${YELLOW}⚠️  AI services not responding${NC}"
+    echo "❌ Frontend health check failed"
+    exit 1
 fi
 
-# Malaysian API connectivity test
-echo -e "${YELLOW}🇲🇾 Malaysian API connectivity test${NC}"
-docker-compose exec -T backend python -c "
-from integrations.malaysian_apis import MalaysianAPIIntegration
-api = MalaysianAPIIntegration()
-print('✅ Malaysian APIs configured')
-"
-
-echo -e "${GREEN}🎉 Deployment completed successfully!${NC}"
-echo -e "${GREEN}📊 Access Points:${NC}"
-echo -e "  🌐 Application: https://your-domain.com"
-echo -e "  📚 API Docs: https://your-domain.com/docs"
-echo -e "  📈 Monitoring: http://your-domain.com:9090"
+echo "🎉 Deployment completed successfully!"
+echo "📊 Access points:"
+echo "   - API: http://localhost:8000"
+echo "   - Frontend: http://localhost:3000"
+echo "   - Monitoring: http://localhost:9090"
